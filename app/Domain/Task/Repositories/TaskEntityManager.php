@@ -19,7 +19,7 @@ final class TaskEntityManager extends EloquentRepository implements TaskEntityMa
 
     public function updateTask(TaskDto $taskDto): TaskDto
     {
-        $task = Task::findOrFail($taskDto->title);
+        $task = Task::findOrFail($taskDto->id);
         $task->update($taskDto->toArray());
         $this->clearCache($taskDto);
 

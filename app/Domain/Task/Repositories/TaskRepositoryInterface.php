@@ -7,7 +7,6 @@ namespace App\Domain\Task\Repositories;
 use App\Domain\Task\Transfers\TaskDto;
 use App\Parent\Transfers\RequestDto;
 use Spatie\LaravelData\DataCollection;
-use Spatie\LaravelData\PaginatedDataCollection;
 
 interface TaskRepositoryInterface
 {
@@ -22,6 +21,8 @@ interface TaskRepositoryInterface
      */
     public function getAvailableTasks(): DataCollection;
 
+    public function findTaskById(int $id): ?TaskDto;
+
     public function findTaskByTitle(string $title): ?TaskDto;
 
     public function findTaskByUserId(int $userId): ?TaskDto;
@@ -29,9 +30,9 @@ interface TaskRepositoryInterface
     public function findTaskByStatusId(int $statusId): ?TaskDto;
 
     /**
-     * @return PaginatedDataCollection<int|string, TaskDto>
+     * @return DataCollection<int|string, TaskDto>
      */
-    public function getTaskCollection(RequestDto $requestDto): PaginatedDataCollection;
+    public function getTasksCollection(RequestDto $requestDto): DataCollection;
 
     public function getFirstTask(): TaskDto;
 }

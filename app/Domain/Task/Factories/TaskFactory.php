@@ -8,6 +8,9 @@ use App\Domain\Task\Models\Task;
 use App\Parent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Task>
+ */
 final class TaskFactory extends Factory
 {
     protected $model = Task::class;
