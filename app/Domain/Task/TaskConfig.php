@@ -17,4 +17,12 @@ final class TaskConfig extends KernelConfig
     {
         return ['id', 'title', 'status_id', 'user_id', 'created_at'];
     }
+
+    /**
+     * @return string[]
+     */
+    public function getAllowedFilters(): array
+    {
+        return [];
+    }
 }

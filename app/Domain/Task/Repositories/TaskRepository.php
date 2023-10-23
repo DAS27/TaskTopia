@@ -66,19 +66,22 @@ final class TaskRepository extends EloquentRepository implements TaskRepositoryI
     }
 
     /**
-     * @return PaginatedDataCollection<(int|string), TaskDto>
+     * @return DataCollection<(int|string), TaskDto>
      */
-    public function getTaskCollection(RequestDto $requestDto): PaginatedDataCollection
+    public function getTasksCollection(RequestDto $requestDto): DataCollection
     {
         $config = app(TaskConfig::class);
 
-        /** @var PaginatedDataCollection<(int|string), TaskDto> $result */
-        $result = TaskDto::collection(
-            ApiQueryBuilder::for(Task::class)
+        /** @var Task[] $result */
+        $items = ApiQueryBuilder::for(Task::class)
                 ->setRequestFromDto($requestDto)
                 ->allowedSorts($config->getAllowedSorts())
-                ->jsonPaginate($requestDto)
-        );
+                ->allowedFilters($config->getAllowedFilters())
+                ->with(['user', 'status'])
+                ->get();
+
+        /** @var DataCollection<int|string, TaskDto> $result */
+        $result = TaskDto::collection($items)->include('user', 'status');
 
         return $result;
     }
@@ -86,5 +89,16 @@ final class TaskRepository extends EloquentRepository implements TaskRepositoryI
     public function getFirstTask(): TaskDto
     {
         return TaskDto::from(Task::firstOrFail());
+    }
+
+    public function findTaskById(int $id): ?TaskDto
+    {
+        $task = Task::with(['user', 'status'])->find($id);
+
+        if (! $task) {
+            return null;
+        }
+
+        return TaskDto::from($task)->include('user', 'status');
     }
 }
